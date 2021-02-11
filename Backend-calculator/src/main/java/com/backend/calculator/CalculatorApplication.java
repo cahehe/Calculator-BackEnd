@@ -19,17 +19,25 @@ import javax.script.ScriptException;
 @RequestMapping(value = "api")
 public class CalculatorApplication {
 
+	//javascript engine that's going to be doing calculation for us.
 	ScriptEngineManager mgr = new ScriptEngineManager();
-    ScriptEngine engine = mgr.getEngineByName("JavaScript");
+	ScriptEngine engine = mgr.getEngineByName("JavaScript");
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(CalculatorApplication.class, args);
 	}
 
-	@RequestMapping(value = "/calculate", method = RequestMethod.GET)		
+	@GetMapping(value = "/")
+	@ResponseBody
+	public String landingPage(){
+		return "Welcome to the calculator api\n";
+	}
+
+	@RequestMapping(value = "calculate", method = RequestMethod.GET)		
 	@ResponseBody
 	public String calculate(@RequestParam String expression){
-		System.out.println(expression + "\n");
+		//System.out.println(expression + "\n");
 		try{
 			 //System.out.println(engine.eval(expression) + "\n");
 			 return engine.eval(expression).toString() + "\n";
@@ -40,32 +48,9 @@ public class CalculatorApplication {
 	}
 
 	@GetMapping(value = "*")
+	@ResponseBody
 	public String fallBack(){		
 		return "Could not find endpoint\n";
-	}
-
-	@RequestMapping(value = "/hola", headers = "key=val")
-	//@ResponseBody
-	public String hola(){		
-		return "Hola1\n";
-	}
-
-	@RequestMapping(value = "/hola", headers = "key2=val2")
-	//@ResponseBody
-	public String hola2(){		
-		return "Hola2\n";
-	}
-
-	@PostMapping("/api/foos")
-	@ResponseBody
-	public String updateFoos(@RequestParam Map<String,String> allParams) {
-		return "Parameters are " + allParams.entrySet() + "\n";
-	}
-
-
-	@GetMapping(value = "/map")
-	public String withMap(@RequestParam Map<String, String> allParam){
-		return "Params are " + allParam.entrySet() + "\n"; 
 	}
 
 
